@@ -7,6 +7,7 @@
 
 /** @file order_gui.cpp GUI related to orders. */
 
+#include <iostream>
 #include "stdafx.h"
 #include "command_func.h"
 #include "viewport_func.h"
@@ -270,24 +271,28 @@ void DrawOrderString(const Vehicle *v, const Order *order, int order_index, int 
 
 			if (timetable) {
 				/* Show only wait time in the timetable window. */
-				//SetDParam(3, STR_EMPTY);
-
 				if (order->GetWaitTime() > 0) {
 					SetDParam(3, order->IsWaitTimetabled() ? STR_TIMETABLE_STAY_FOR : STR_TIMETABLE_STAY_FOR_ESTIMATED);
 					SetTimetableParams(3, 4, order->GetWaitTime());
 				}
 			} else {
+				int pos = 3;
 				/* Show non-stop, refit and stop location only in the order window. */
-				SetDParam(3, (order->GetNonStopType() & ONSF_NO_STOP_AT_DESTINATION_STATION) ? STR_EMPTY : _station_load_types[order->IsRefit()][unload][load]);
+				if (!(order->GetNonStopType() & ONSF_NO_STOP_AT_DESTINATION_STATION)) {
+					std::cout << "ONE\n";
+					//SetDParam(pos++, _station_load_types[order->IsRefit()][unload][load]);
+				}
 				if (order->IsRefit()) {
-					SetDParam(4, order->IsAutoRefit() ? STR_ORDER_AUTO_REFIT_ANY : CargoSpec::Get(order->GetRefitCargo())->name);
+					std::cout << "TWO\n";
+					SetDParam(pos++, order->IsAutoRefit() ? STR_ORDER_AUTO_REFIT_ANY : CargoSpec::Get(order->GetRefitCargo())->name);
 				}
 				if (v->type == VEH_TRAIN && (order->GetNonStopType() & ONSF_NO_STOP_AT_DESTINATION_STATION) == 0) {
 					/* Only show the stopping location if other than the default chosen by the player. */
+					std::cout << "DAVID - " << pos << std::endl;
 					if (order->GetStopLocation() != (OrderStopLocation)(_settings_client.gui.stop_location)) {
-						SetDParam(3, order->GetStopLocation() + STR_ORDER_STOP_LOCATION_NEAR_END);
+						SetDParam(pos, order->GetStopLocation() + STR_ORDER_STOP_LOCATION_NEAR_END);
 					} else {
-						SetDParam(5, STR_EMPTY);
+						SetDParam(pos, STR_EMPTY);
 					}
 				}
 			}

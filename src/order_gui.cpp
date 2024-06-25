@@ -270,11 +270,11 @@ void DrawOrderString(const Vehicle *v, const Order *order, int order_index, int 
 
 			if (timetable) {
 				/* Show only wait time in the timetable window. */
-				SetDParam(3, STR_EMPTY);
+				//SetDParam(3, STR_EMPTY);
 
 				if (order->GetWaitTime() > 0) {
-					SetDParam(5, order->IsWaitTimetabled() ? STR_TIMETABLE_STAY_FOR : STR_TIMETABLE_STAY_FOR_ESTIMATED);
-					SetTimetableParams(6, 7, order->GetWaitTime());
+					SetDParam(3, order->IsWaitTimetabled() ? STR_TIMETABLE_STAY_FOR : STR_TIMETABLE_STAY_FOR_ESTIMATED);
+					SetTimetableParams(3, 4, order->GetWaitTime());
 				}
 			} else {
 				/* Show non-stop, refit and stop location only in the order window. */
@@ -285,7 +285,7 @@ void DrawOrderString(const Vehicle *v, const Order *order, int order_index, int 
 				if (v->type == VEH_TRAIN && (order->GetNonStopType() & ONSF_NO_STOP_AT_DESTINATION_STATION) == 0) {
 					/* Only show the stopping location if other than the default chosen by the player. */
 					if (order->GetStopLocation() != (OrderStopLocation)(_settings_client.gui.stop_location)) {
-						SetDParam(5, order->GetStopLocation() + STR_ORDER_STOP_LOCATION_NEAR_END);
+						SetDParam(3, order->GetStopLocation() + STR_ORDER_STOP_LOCATION_NEAR_END);
 					} else {
 						SetDParam(5, STR_EMPTY);
 					}
